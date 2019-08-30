@@ -9,7 +9,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class BurpExtender implements IBurpExtender,ITab,IProxyListener {
+public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpListener {
     public final static String extensionName = "Passive Scan Client";
     public final static String version ="0.1";
     public static IBurpExtenderCallbacks callbacks;
@@ -74,11 +74,22 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener {
         return gui.getComponet();
     }
 
+    public void processHttpMessage(int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
+                BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
+                stdout.println(messageInfo.getRequest().toString());
+            }
+        });
+    }
+
     public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
         if (!messageIsRequest && Config.IS_RUNNING) {
             IHttpRequestResponse reprsp = iInterceptedProxyMessage.getMessageInfo();
             IHttpService httpService = reprsp.getHttpService();
-
+            stdout.print(iInterceptedProxyMessage.getMessageInfo().getRequest().toString());
+            iInterceptedProxyMessage.
             String host = reprsp.getHttpService().getHost();
             stdout.println("[+] host:" + host);
             stdout.println(Config.DOMAIN_REGX);
