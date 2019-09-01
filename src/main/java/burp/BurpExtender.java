@@ -53,6 +53,7 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
             public void run() {
                 BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
                 BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
+                BurpExtender.this.callbacks.registerHttpListener(BurpExtender.this);
                 stdout.println(Utils.getBanner());
             }
         });
@@ -105,13 +106,19 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
     }
 
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
-                BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
-                stdout.println(messageInfo.getRequest().toString());
-            }
-        });
+        try {
+            String result = getRequestData(messageInfo);
+            Map<String, String> res = sendPost("http://localhost:8000/api", result);
+            IRequestInfo request = helpers.analyzeRequest(messageInfo);
+            int row = log.size();
+            log.add(new LogEntry(messageInfo.getRequest().length,
+                    callbacks.saveBuffersToTempFiles(messageInfo), request.getUrl(),
+                    request.getMethod(), res)
+            );
+            GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private String getBody(IHttpRequestResponse messageInfo) {
@@ -162,32 +169,39 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
 
     }
 
+    // obtain request data as JSON string
+    private String getRequestData(IHttpRequestResponse messageInfo) {
+        List<Map<String, String>> headers = getHeaders(messageInfo);
+        IRequestInfo requestInfo = helpers.analyzeRequest(messageInfo);
+        String url = requestInfo.getUrl().toString();
+        String method = requestInfo.getMethod();
+        String host = requestInfo.getUrl().getHost();
+        String postData = "";
+        String agentId = "";
+        if (method == "POST") {
+            postData = getBody(messageInfo);
+        }
+        long t = System.currentTimeMillis();
+        RequestData requestData = new RequestData(url, host, method, agentId, postData, t, headers);
+        Gson gson = new Gson();
+        String result = gson.toJson(requestData);
+        return result;
+    }
+
     public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
         Map<String, String> res;
         try {
             if (!Config.IS_RUNNING) {
                 return;
             }
-            List<Map<String, String>> headers = getHeaders(iInterceptedProxyMessage.getMessageInfo());
-            IRequestInfo requestInfo = helpers.analyzeRequest(iInterceptedProxyMessage.getMessageInfo());
-            String url = requestInfo.getUrl().toString();
-            String method = requestInfo.getMethod();
-            String host = requestInfo.getUrl().getHost();
-            String postData = "";
-            String agentId = "";
-            if (method == "POST") {
-                postData = getBody(iInterceptedProxyMessage.getMessageInfo());
-            }
-            long t = System.currentTimeMillis();
-            RequestData requestData = new RequestData(url, host, method, agentId, postData, t, headers);
-            Gson gson = new Gson();
-            String result = gson.toJson(requestData);
+            IHttpRequestResponse messageInfo = iInterceptedProxyMessage.getMessageInfo();
+            String result = getRequestData(messageInfo);
             res = sendPost("http://localhost:8000/api", result);
+            IRequestInfo request = helpers.analyzeRequest(messageInfo);
             int row = log.size();
-
             log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
-                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), requestInfo.getUrl(),
-                    method, res)
+                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), request.getUrl(),
+                    request.getMethod(), res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
         } catch (Exception e) {
