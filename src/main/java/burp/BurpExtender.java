@@ -29,7 +29,7 @@ import javax.swing.table.TableColumnModel;
 
 public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public final static String extensionName = "R-forwarder";
-    public final static String version ="0.1";
+    public final static String version ="0.0.1";
     public static IBurpExtenderCallbacks callbacks;
     public static IExtensionHelpers helpers;
     public static PrintWriter stdout;

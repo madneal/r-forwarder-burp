@@ -25,6 +25,8 @@ public class HttpLogTableModel extends AbstractTableModel {
             case 3:
                 return "Status";
             case 4:
+                return "Tool Source";
+            case 5:
                 return "Time";
             default:
                 return "";
@@ -51,6 +53,8 @@ public class HttpLogTableModel extends AbstractTableModel {
             case 3:
                 return logEntry.result;
             case 4:
+                return logEntry.toolSource;
+            case 5:
                 return logEntry.requestTime;
             default:
                 return "";
