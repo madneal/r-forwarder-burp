@@ -8,6 +8,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -154,6 +155,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                     request.getMethod(), res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
+            if (res.get("code") == "0") {
+                Utils.updateSuccessCount();
+            } else {
+                Utils.updateFailCount();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,7 +174,12 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     }
 
     private Map<String, String> sendPost(String url, String data) {
-        HttpClient client = HttpClientBuilder.create().build();
+        int timeout = 5;
+        RequestConfig config = RequestConfig.custom()
+                .setConnectTimeout(timeout * 1000)
+                .setConnectionRequestTimeout(timeout * 1000)
+                .setSocketTimeout(timeout * 1000).build();
+        HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
         Map<String, String> result = new HashMap<>();
         try {
             StringEntity requestEntity = new StringEntity(data, ContentType.APPLICATION_JSON);
@@ -209,20 +220,25 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
 
     // obtain request data as JSON string
     private String getRequestData(IHttpRequestResponse messageInfo) {
-        List<Map<String, String>> headers = getHeaders(messageInfo);
-        IRequestInfo requestInfo = helpers.analyzeRequest(messageInfo);
-        String url = requestInfo.getUrl().toString();
-        String method = requestInfo.getMethod();
-        String host = requestInfo.getUrl().getHost();
-        String postData = "";
-        String agentId = "";
-        if (method == "POST") {
-            postData = getBody(messageInfo);
+        String result = "";
+        try {
+            List<Map<String, String>> headers = getHeaders(messageInfo);
+            IRequestInfo requestInfo = helpers.analyzeRequest(messageInfo);
+            String url = requestInfo.getUrl().toString();
+            String method = requestInfo.getMethod();
+            String host = requestInfo.getUrl().getHost();
+            String postData = "";
+            if (method == "POST") {
+                postData = getBody(messageInfo);
+            }
+            long t = System.currentTimeMillis();
+            RequestData requestData = new RequestData(url, host, method, Config.AGENT_ID, postData, t, headers);
+            Gson gson = new Gson();
+            result = gson.toJson(requestData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            stderr.print(e);
         }
-        long t = System.currentTimeMillis();
-        RequestData requestData = new RequestData(url, host, method, agentId, postData, t, headers);
-        Gson gson = new Gson();
-        String result = gson.toJson(requestData);
         return result;
     }
 
