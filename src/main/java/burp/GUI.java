@@ -164,13 +164,13 @@ public class GUI implements IMessageEditorController {
         gbc_lb1.gridy = 0;
         ConfigPanel.add(new JLabel(""), gbc_lb1);
 
-        btnConn = new JToggleButton("Run");
+        btnConn = new JToggleButton("ON");
         btnConn.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent arg0) {
                 boolean isSelected = btnConn.isSelected();
 
-                if(isSelected){
-                    btnConn.setText("Stop");
+                if(isSelected) {
+                    btnConn.setText("OFF");
                     Config.IS_RUNNING = true;
                     Config.PROXY_HOST = tfHost.getText();
                     Config.PROXY_PORT = Integer.valueOf(tfPort.getText());
@@ -180,8 +180,8 @@ public class GUI implements IMessageEditorController {
                     Config.DOMAIN_REGX = tfDomain.getText();
                     Config.SUFFIX_REGX = tfExcludeSuffix.getText();
                     setAllEnabled(false);
-                }else{
-                    btnConn.setText("Run");
+                } else {
+                    btnConn.setText("ON");
                     Config.IS_RUNNING = false;
                     setAllEnabled(true);
                 }

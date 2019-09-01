@@ -28,7 +28,7 @@ import javax.swing.table.TableColumnModel;
 
 
 public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpListener {
-    public final static String extensionName = "Passive Scan Client";
+    public final static String extensionName = "R-forwarder";
     public final static String version ="0.1";
     public static IBurpExtenderCallbacks callbacks;
     public static IExtensionHelpers helpers;
@@ -75,9 +75,7 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
             }
         });
     }
-    //
-    // 实现ITab
-    //
+
 
     @Override
     public String getTabCaption() {
@@ -150,11 +148,12 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
     }
 
     public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
+        Map<String, String> res;
         try {
             List<Map<String, String>> headers = getHeaders(iInterceptedProxyMessage.getMessageInfo());
             IRequestInfo requestInfo = helpers.analyzeRequest(iInterceptedProxyMessage.getMessageInfo());
-            String url = requestInfo.getUrl().toString();
-            String method = requestInfo.getMethod();
+            final String url = requestInfo.getUrl().toString();
+            final String method = requestInfo.getMethod();
             String host = requestInfo.getUrl().getHost();
             String postData = "";
             String agentId = "";
@@ -166,56 +165,35 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
             Gson gson = new Gson();
             String result = gson.toJson(requestData);
             stdout.print(result);
-            Map<String, String> res = sendPost("http://localhost:8000/api", result);
+            res = sendPost("http://localhost:8000/api", result);
             if (res.get("result") == "success") {
                 stdout.print("request success!!!");
             }
+            int row = log.size();
+
+            log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
+                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), requestInfo.getUrl(),
+                    method, res)
+            );
+            GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    synchronized(log) {
+//                        int row = log.size();
+//                        Map<String,String> mapResult = HttpAndHttpsProxy.Proxy(resrsp);
+//
+//                        log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
+//                                callbacks.saveBuffersToTempFiles(resrsp), helpers.analyzeRequest(resrsp).getUrl(),
+//                                method,
+//                                res)
+//                        );
+//                        GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
+//                    }
+//                }
+//            });
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (!messageIsRequest && Config.IS_RUNNING) {
-            IHttpRequestResponse reprsp = iInterceptedProxyMessage.getMessageInfo();
-            IHttpService httpService = reprsp.getHttpService();
-            stdout.print(iInterceptedProxyMessage.getMessageInfo());
-//            List<String> headers = helpers.analyzeRequest(reprsp).getHeaders();
-            for (String header: helpers.analyzeRequest(reprsp).getHeaders()) {
-                System.out.println(header);
-            }
-//            String host = reprsp.getHttpService().getHost();
-//            stdout.println("[+] host:" + host);
-//            stdout.println(Config.DOMAIN_REGX);
-//            if(!Utils.isMathch(Config.DOMAIN_REGX,host)){
-//                return;
-//            }
-
-//            String url = helpers.analyzeRequest(httpService,reprsp.getRequest()).getUrl().toString();
-//            url = url.indexOf("?") > 0 ? url.substring(0, url.indexOf("?")) : url;
-//            if(Utils.isMathch(Config.SUFFIX_REGX,url)){
-//                return;
-//            }
-
-            final IHttpRequestResponse resrsp = iInterceptedProxyMessage.getMessageInfo();
-
-            //final LogEntry logEntry = new LogEntry(1,callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()),helpers.analyzeRequest(resrsp).getUrl());
-
-            // create a new log entry with the message details
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized(log) {
-                        int row = log.size();
-                        String method = helpers.analyzeRequest(resrsp).getMethod();
-                        Map<String,String> mapResult = HttpAndHttpsProxy.Proxy(resrsp);
-
-                        log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
-                                callbacks.saveBuffersToTempFiles(resrsp), helpers.analyzeRequest(resrsp).getUrl(),
-                                method,
-                                mapResult)
-                        );
-                        GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-                    }
-                }
-            });
         }
     }
 }
