@@ -105,8 +105,38 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
         return headers;
     }
 
+    private String getToolSource(int toolFlag) {
+        switch (toolFlag) {
+            case 1:
+                return "SUITE";
+            case 2:
+                return "TARGET";
+            case 4:
+                return "PROXY";
+            case 8:
+                return "SPIDER";
+            case 16:
+                return "SCANNER";
+            case 32:
+                return "INTRUDER";
+            case 64:
+                return "REPEATER";
+            case 128:
+                return "SEQUENCER";
+            case 256:
+                return "DECODER";
+            case 512:
+                return "COMPARER";
+            case 1024:
+                return "EXTENDER";
+            default:
+                return "";
+        }
+    }
+
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
         try {
+            String toolSource = getToolSource(toolFlag);
             String result = getRequestData(messageInfo);
             Map<String, String> res = sendPost("http://localhost:8000/api", result);
             IRequestInfo request = helpers.analyzeRequest(messageInfo);
