@@ -10,15 +10,9 @@ import javax.swing.event.ChangeListener;
 public class GUI implements IMessageEditorController {
     private JPanel contentPane;
     private JLabel lbService;
-    private JTextField tfHost;
-    private JLabel lbPort;
-    private JTextField tfPort;
-    private JLabel lbTimeout;
-    private JTextField tfTimeout;
-    private JLabel lbUsername;
-    private JTextField tfUsername;
-    private JLabel lbPassword;
-    private JTextField tfPassword;
+    private JTextField tfService;
+    private JLabel lbAgendId;
+    private JTextField tfAgentId;
     private JTextField tfDomain;
     private JTextField tfExcludeSuffix;
     private JToggleButton btnConn;
@@ -66,13 +60,39 @@ public class GUI implements IMessageEditorController {
         gbl_panel.rowWeights = new double[] { 0.0D, Double.MIN_VALUE };
         ConfigPanel.setLayout(gbl_panel);
 
-        lbService = new JLabel("Service:");
+        lbService = new JLabel("<html>Service:<font color='red'>*</font></html>");
         GridBagConstraints gbc_lbHost = new GridBagConstraints();
         gbc_lbHost.fill = 2;
         gbc_lbHost.insets = new Insets(0, 0, 0, 5);
         gbc_lbHost.gridx = 0;
         gbc_lbHost.gridy = 0;
         ConfigPanel.add(lbService, gbc_lbHost);
+
+        tfService = new JTextField(40);
+        tfService.setText("127.0.0.1");
+        GridBagConstraints gbc_tfHost = new GridBagConstraints();
+        gbc_tfHost.fill = 2;
+        gbc_tfHost.insets = new Insets(0, 0, 0, 5);
+        gbc_tfHost.gridx = 1;
+        gbc_tfHost.gridy = 0;
+        ConfigPanel.add(tfService, gbc_tfHost);
+
+        lbAgendId = new JLabel("<html>AgentId:<font color='red'>*</font></html>");
+        GridBagConstraints gbc_lbService = new GridBagConstraints();
+        gbc_lbHost.fill = 2;
+        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
+        gbc_lbHost.gridx = 0;
+        gbc_lbHost.gridy = 0;
+        ConfigPanel.add(lbAgendId, gbc_lbService);
+
+        tfAgentId = new JTextField(10);
+        tfAgentId.setText("");
+        GridBagConstraints gbc_tfAgentId = new GridBagConstraints();
+        gbc_tfHost.fill = 2;
+        gbc_tfHost.insets = new Insets(0, 0, 0, 5);
+        gbc_tfHost.gridx = 1;
+        gbc_tfHost.gridy = 0;
+        ConfigPanel.add(tfAgentId, gbc_tfAgentId);
 
         GridBagConstraints gbc_lb1 = new GridBagConstraints();
         gbc_lb1.anchor = 13;
@@ -89,11 +109,8 @@ public class GUI implements IMessageEditorController {
                 if(isSelected) {
                     btnConn.setText("OFF");
                     Config.IS_RUNNING = true;
-                    Config.PROXY_HOST = tfHost.getText();
-                    Config.PROXY_PORT = Integer.valueOf(tfPort.getText());
-                    Config.PROXY_TIMEOUT = Integer.valueOf(tfTimeout.getText());
-                    Config.PROXY_USERNAME = tfUsername.getText();
-                    Config.PROXY_PASSWORD = tfPassword.getText();
+                    Config.AGENT_ID = tfAgentId.getText();
+                    Config.SERVICE = tfService.getText();
                     Config.DOMAIN_REGX = tfDomain.getText();
                     Config.SUFFIX_REGX = tfExcludeSuffix.getText();
                     setAllEnabled(false);
@@ -324,11 +341,7 @@ public class GUI implements IMessageEditorController {
     }
 
     public void setAllEnabled(boolean is){
-        tfHost.setEnabled(is);
-        tfPort.setEnabled(is);
-        tfUsername.setEnabled(is);
-        tfPassword.setEnabled(is);
-        tfTimeout.setEnabled(is);
+        tfService.setEnabled(is);
         tfDomain.setEnabled(is);
         tfExcludeSuffix.setEnabled(is);
     }
