@@ -136,13 +136,21 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
 
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
         try {
+            if (!Config.IS_RUNNING) {
+                return;
+            }
+            if (!(toolFlag == 4 || toolFlag == 64)) {
+                return;
+            }
             String toolSource = getToolSource(toolFlag);
             String result = getRequestData(messageInfo);
-            Map<String, String> res = sendPost("http://localhost:8000/api", result);
+            Map<String, String> res = sendPost(Config.SERVICE, result);
             IRequestInfo request = helpers.analyzeRequest(messageInfo);
+
+            Config.RequestId++;
             int row = log.size();
-            log.add(new LogEntry(messageInfo.getRequest().length,
-                    callbacks.saveBuffersToTempFiles(messageInfo), request.getUrl(),
+            log.add(new LogEntry(Config.RequestId,
+                    callbacks.saveBuffersToTempFiles(messageInfo), request.getUrl(), toolSource,
                     request.getMethod(), res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);

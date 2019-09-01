@@ -10,4 +10,6 @@ public class Config {
     public static Integer REQUEST_TOTAL = 0;
     public static Integer SUCCESS_TOTAL = 0;
     public static Integer FAIL_TOTAL = 0;
+
+    public static int RequestId = 0;
 }
