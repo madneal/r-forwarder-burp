@@ -27,7 +27,7 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpListener {
+public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public final static String extensionName = "R-forwarder";
     public final static String version ="0.1";
     public static IBurpExtenderCallbacks callbacks;
@@ -52,7 +52,7 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
-                BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
+//                BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
                 BurpExtender.this.callbacks.registerHttpListener(BurpExtender.this);
                 stdout.println(Utils.getBanner());
             }
@@ -226,24 +226,24 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
         return result;
     }
 
-    public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
-        Map<String, String> res;
-        try {
-            if (!Config.IS_RUNNING) {
-                return;
-            }
-            IHttpRequestResponse messageInfo = iInterceptedProxyMessage.getMessageInfo();
-            String result = getRequestData(messageInfo);
-            res = sendPost("http://localhost:8000/api", result);
-            IRequestInfo request = helpers.analyzeRequest(messageInfo);
-            int row = log.size();
-            log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
-                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), request.getUrl(),
-                    request.getMethod(), res)
-            );
-            GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
+//        Map<String, String> res;
+//        try {
+//            if (!Config.IS_RUNNING) {
+//                return;
+//            }
+//            IHttpRequestResponse messageInfo = iInterceptedProxyMessage.getMessageInfo();
+//            String result = getRequestData(messageInfo);
+//            res = sendPost("http://localhost:8000/api", result);
+//            IRequestInfo request = helpers.analyzeRequest(messageInfo);
+//            int row = log.size();
+//            log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
+//                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), request.getUrl(),
+//                    request.getMethod(), res)
+//            );
+//            GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
