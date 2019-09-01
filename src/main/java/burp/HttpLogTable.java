@@ -10,7 +10,6 @@ public class HttpLogTable extends JTable {
         return httpLogTableModel;
     }
 
-
     public HttpLogTable(TableModel tableModel) {
         super(tableModel);
         this.httpLogTableModel = (HttpLogTableModel) tableModel;

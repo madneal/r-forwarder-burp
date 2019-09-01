@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener;
 
 public class GUI implements IMessageEditorController {
     private JPanel contentPane;
-    private JLabel lbHost;
+    private JLabel lbService;
     private JTextField tfHost;
     private JLabel lbPort;
     private JTextField tfPort;
@@ -66,96 +66,13 @@ public class GUI implements IMessageEditorController {
         gbl_panel.rowWeights = new double[] { 0.0D, Double.MIN_VALUE };
         ConfigPanel.setLayout(gbl_panel);
 
-        lbHost = new JLabel("Host:");
+        lbService = new JLabel("Service:");
         GridBagConstraints gbc_lbHost = new GridBagConstraints();
         gbc_lbHost.fill = 2;
         gbc_lbHost.insets = new Insets(0, 0, 0, 5);
         gbc_lbHost.gridx = 0;
         gbc_lbHost.gridy = 0;
-        ConfigPanel.add(lbHost, gbc_lbHost);
-
-
-        tfHost = new JTextField();
-        tfHost.setColumns(10);
-        tfHost.setText("127.0.0.1");
-        GridBagConstraints gbc_tfHost = new GridBagConstraints();
-        gbc_tfHost.fill = 2;
-        gbc_tfHost.insets = new Insets(0, 0, 0, 5);
-        gbc_tfHost.gridx = 1;
-        gbc_tfHost.gridy = 0;
-        ConfigPanel.add(tfHost, gbc_tfHost);
-
-        lbPort = new JLabel("Port:");
-        GridBagConstraints gbc_lbPort = new GridBagConstraints();
-        gbc_lbPort.fill = 2;
-        gbc_lbPort.insets = new Insets(0, 0, 0, 5);
-        gbc_lbPort.gridx = 2;
-        gbc_lbPort.gridy = 0;
-        ConfigPanel.add(lbPort, gbc_lbPort);
-
-        tfPort = new JTextField();
-        tfPort.setText("1664");
-        tfPort.setColumns(10);
-        GridBagConstraints gbc_tfPort = new GridBagConstraints();
-        gbc_tfPort.fill = 2;
-        gbc_tfPort.insets = new Insets(0, 0, 0, 5);
-        gbc_tfPort.gridx = 3;
-        gbc_tfPort.gridy = 0;
-        ConfigPanel.add(tfPort, gbc_tfPort);
-
-        lbUsername = new JLabel("Username:");
-        GridBagConstraints gbc_lbUsername = new GridBagConstraints();
-        gbc_lbUsername.fill = 2;
-        gbc_lbUsername.insets = new Insets(0, 0, 0, 5);
-        gbc_lbUsername.gridx = 4;
-        gbc_lbUsername.gridy = 0;
-        ConfigPanel.add(lbUsername, gbc_lbUsername);
-
-        tfUsername = new JTextField();
-        tfUsername.setText("");
-        tfUsername.setColumns(10);
-        GridBagConstraints gbc_tfUsername = new GridBagConstraints();
-        gbc_tfUsername.fill = 2;
-        gbc_tfUsername.insets = new Insets(0, 0, 0, 5);
-        gbc_tfUsername.gridx = 5;
-        gbc_tfUsername.gridy = 0;
-        ConfigPanel.add(tfUsername, gbc_tfUsername);
-
-        lbPassword = new JLabel("Password:");
-        GridBagConstraints gbc_lbPassword = new GridBagConstraints();
-        gbc_lbPassword.fill = 2;
-        gbc_lbPassword.insets = new Insets(0, 0, 0, 5);
-        gbc_lbPassword.gridx = 6;
-        gbc_lbPassword.gridy = 0;
-        ConfigPanel.add(lbPassword, gbc_lbPassword);
-
-        tfPassword = new JTextField();
-        tfPassword.setText("");
-        tfPassword.setColumns(10);
-        GridBagConstraints gbc_tfPassword = new GridBagConstraints();
-        gbc_tfPassword.fill = 2;
-        gbc_tfPassword.insets = new Insets(0, 0, 0, 5);
-        gbc_tfPassword.gridx = 7;
-        gbc_tfPassword.gridy = 0;
-        ConfigPanel.add(tfPassword, gbc_tfPassword);
-
-        lbTimeout = new JLabel("Timeout:");
-        GridBagConstraints gbc_lbTimeout = new GridBagConstraints();
-        gbc_lbTimeout.fill = 2;
-        gbc_lbTimeout.gridx = 8;
-        gbc_lbTimeout.gridy = 0;
-        ConfigPanel.add(lbTimeout, gbc_lbTimeout);
-
-        tfTimeout = new JTextField();
-        tfTimeout.setText("5000");
-        tfTimeout.setColumns(5);
-        GridBagConstraints gbc_tfTimeout = new GridBagConstraints();
-        gbc_tfTimeout.fill = 2;
-        gbc_tfTimeout.insets = new Insets(0, 0, 0, 5);
-        gbc_tfTimeout.gridx = 9;
-        gbc_tfTimeout.gridy = 0;
-        ConfigPanel.add(tfTimeout, gbc_tfTimeout);
-
+        ConfigPanel.add(lbService, gbc_lbHost);
 
         GridBagConstraints gbc_lb1 = new GridBagConstraints();
         gbc_lb1.anchor = 13;
@@ -200,7 +117,9 @@ public class GUI implements IMessageEditorController {
         btnClear.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int n = JOptionPane.showConfirmDialog(null, "Are you sure you want to clear the data？", "Passvie Scan Client prompt", JOptionPane.YES_NO_OPTION);
+                int n = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to clear the data？",
+                        "Passvie Scan Client prompt", JOptionPane.YES_NO_OPTION);
                 if(n == 0) {
                     Config.REQUEST_TOTAL = 0;
                     lbRequestCount.setText("0");
