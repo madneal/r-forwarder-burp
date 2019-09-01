@@ -165,6 +165,9 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
     public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
         Map<String, String> res;
         try {
+            if (!Config.IS_RUNNING) {
+                return;
+            }
             List<Map<String, String>> headers = getHeaders(iInterceptedProxyMessage.getMessageInfo());
             IRequestInfo requestInfo = helpers.analyzeRequest(iInterceptedProxyMessage.getMessageInfo());
             String url = requestInfo.getUrl().toString();
