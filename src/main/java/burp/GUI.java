@@ -69,7 +69,7 @@ public class GUI implements IMessageEditorController {
         ConfigPanel.add(lbService, gbc_lbHost);
 
         tfService = new JTextField(40);
-        tfService.setText("127.0.0.1");
+        tfService.setText(Config.SERVICE);
         GridBagConstraints gbc_tfHost = new GridBagConstraints();
         gbc_tfHost.fill = 2;
         gbc_tfHost.insets = new Insets(0, 0, 0, 5);
