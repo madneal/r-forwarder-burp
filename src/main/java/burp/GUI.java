@@ -13,6 +13,7 @@ public class GUI implements IMessageEditorController {
     private JTextField tfService;
     private JLabel lbAgendId;
     private JTextField tfAgentId;
+    private JLabel lbSaveResult;
     private JTextField tfDomain;
     private JTextField tfExcludeSuffix;
     private JToggleButton btnConn;
@@ -94,25 +95,42 @@ public class GUI implements IMessageEditorController {
         gbc_tfHost.gridy = 0;
         ConfigPanel.add(tfAgentId, gbc_tfAgentId);
 
-        GridBagConstraints gbc_lb1 = new GridBagConstraints();
-        gbc_lb1.anchor = 13;
-        gbc_lb1.insets = new Insets(0, 0, 0, 5);
-        gbc_lb1.gridx = 10;
-        gbc_lb1.gridy = 0;
-        ConfigPanel.add(new JLabel(""), gbc_lb1);
+        lbSaveResult = new JLabel();
+        GridBagConstraints gbc_lbSaveResult = new GridBagConstraints();
+        gbc_lbHost.fill = 2;
+        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
+        gbc_lbHost.gridx = 0;
+        gbc_lbHost.gridy = 0;
+        ConfigPanel.add(lbSaveResult, gbc_lbSaveResult);
+
+//        GridBagConstraints gbc_lb1 = new GridBagConstraints();
+//        gbc_lb1.anchor = 13;
+//        gbc_lb1.insets = new Insets(0, 0, 0, 5);
+//        gbc_lb1.gridx = 10;
+//        gbc_lb1.gridy = 0;
+//        ConfigPanel.add(lbSaveResult, gbc_lb1);
 
         btnConn = new JToggleButton("ON");
         btnConn.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent arg0) {
                 boolean isSelected = btnConn.isSelected();
+                lbSaveResult.setText("");
 
                 if(isSelected) {
-                    btnConn.setText("OFF");
                     Config.IS_RUNNING = true;
                     Config.AGENT_ID = tfAgentId.getText();
                     Config.SERVICE = tfService.getText();
+                    if (Config.AGENT_ID.equals("")) {
+                        lbSaveResult.setText("<html><font color='red'>请填写 AgentId</font></html>");
+                        return;
+                    }
+                    if (Config.SERVICE.equals("")) {
+                        lbSaveResult.setText("<html><font color='red'>请填写 Service</font></html>");
+                        return;
+                    }
                     Config.DOMAIN_REGX = tfDomain.getText();
                     Config.SUFFIX_REGX = tfExcludeSuffix.getText();
+                    btnConn.setText("OFF");
                     setAllEnabled(false);
                 } else {
                     btnConn.setText("ON");
