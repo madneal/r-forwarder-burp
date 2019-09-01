@@ -35,7 +35,7 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
     public static PrintWriter stdout;
     public static PrintWriter stderr;
     public static GUI gui;
-    public static final List<LogEntry> log = new ArrayList<LogEntry>();
+    public static final List<LogEntry> log = new ArrayList<>();
     public static BurpExtender burpExtender;
     private ExecutorService executorService;
 
@@ -137,7 +137,22 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
                         Charsets.toCharset(encodingHeader.getValue());
                 String json = EntityUtils.toString(entity, encoding);
                 JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-                result.put("result", jsonObject.get("result").getAsString());
+                String resultPro = "";
+                switch (jsonObject.get("code").getAsInt()) {
+                    case 0:
+                        resultPro = "上传成功";
+                        break;
+                    case 1:
+                        resultPro = "不支持的请求方法";
+                        break;
+                    case 2:
+                        resultPro = "处理请求失败";
+                        break;
+                    case 3:
+                        resultPro = "存入 mq 失败";
+                        break;
+                }
+                result.put("result", resultPro);
                 result.put("code", jsonObject.get("code").getAsString());
             }
         } catch (Exception e) {
@@ -152,8 +167,8 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
         try {
             List<Map<String, String>> headers = getHeaders(iInterceptedProxyMessage.getMessageInfo());
             IRequestInfo requestInfo = helpers.analyzeRequest(iInterceptedProxyMessage.getMessageInfo());
-            final String url = requestInfo.getUrl().toString();
-            final String method = requestInfo.getMethod();
+            String url = requestInfo.getUrl().toString();
+            String method = requestInfo.getMethod();
             String host = requestInfo.getUrl().getHost();
             String postData = "";
             String agentId = "";
@@ -164,11 +179,7 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
             RequestData requestData = new RequestData(url, host, method, agentId, postData, t, headers);
             Gson gson = new Gson();
             String result = gson.toJson(requestData);
-            stdout.print(result);
             res = sendPost("http://localhost:8000/api", result);
-            if (res.get("result") == "success") {
-                stdout.print("request success!!!");
-            }
             int row = log.size();
 
             log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
@@ -176,22 +187,6 @@ public class BurpExtender implements IBurpExtender,ITab,IProxyListener, IHttpLis
                     method, res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-//            executorService.submit(new Runnable() {
-//                @Override
-//                public void run() {
-//                    synchronized(log) {
-//                        int row = log.size();
-//                        Map<String,String> mapResult = HttpAndHttpsProxy.Proxy(resrsp);
-//
-//                        log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
-//                                callbacks.saveBuffersToTempFiles(resrsp), helpers.analyzeRequest(resrsp).getUrl(),
-//                                method,
-//                                res)
-//                        );
-//                        GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-//                    }
-//                }
-//            });
         } catch (Exception e) {
             e.printStackTrace();
         }

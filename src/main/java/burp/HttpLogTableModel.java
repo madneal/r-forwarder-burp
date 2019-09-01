@@ -49,7 +49,7 @@ public class HttpLogTableModel extends AbstractTableModel {
             case 2:
                 return logEntry.url.toString();
             case 3:
-                return logEntry.status;
+                return logEntry.result;
             case 4:
                 return logEntry.requestTime;
             default:

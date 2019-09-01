@@ -10,8 +10,8 @@ public class LogEntry {
     final IHttpRequestResponsePersisted requestResponse;
     final URL url;
     final String method;
-    final String status;
-    final String proxyResponse;
+    final String result;
+//    final String proxyResponse;
     public String requestTime;
 
     LogEntry(int id, IHttpRequestResponsePersisted requestResponse, URL url, String method, Map<String,String> mapResult) {
@@ -19,8 +19,8 @@ public class LogEntry {
         this.requestResponse = requestResponse;
         this.url = url;
         this.method = method;
-        this.status = mapResult.get("status");
-        this.proxyResponse = mapResult.get("result");
+        this.result = mapResult.get("result");
+//        this.proxyResponse =
         this.requestTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     }
 }
