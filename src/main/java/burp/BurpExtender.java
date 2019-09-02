@@ -1,6 +1,7 @@
 package burp;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.codec.Charsets;
@@ -235,11 +236,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             String host = requestInfo.getUrl().getHost();
             String postData = "";
             if (method == "POST") {
-                postData = getBody(messageInfo);
+                postData = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes());
             }
             long t = System.currentTimeMillis();
             RequestData requestData = new RequestData(url, host, method, Config.AGENT_ID, postData, t, headers);
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             result = gson.toJson(requestData);
         } catch (Exception e) {
             e.printStackTrace();
