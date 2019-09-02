@@ -143,10 +143,16 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             if (!(toolFlag == 4 || toolFlag == 64)) {
                 return;
             }
+            IRequestInfo request = helpers.analyzeRequest(messageInfo);
+            if (!Utils.isMathch(Config.DOMAIN_REGX, request.getUrl().getHost())) {
+                return;
+            }
+            if (Utils.isMathch(Config.SUFFIX_REGX, request.getUrl().toString())) {
+                return;
+            }
             String toolSource = getToolSource(toolFlag);
             String result = getRequestData(messageInfo);
             Map<String, String> res = sendPost(Config.SERVICE, result);
-            IRequestInfo request = helpers.analyzeRequest(messageInfo);
 
             Config.RequestId++;
             int row = log.size();
