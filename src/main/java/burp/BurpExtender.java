@@ -162,7 +162,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                     request.getMethod(), res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-            if (res.get("code") == "0") {
+            if (res.get("code").equals("0")) {
                 Utils.updateSuccessCount();
             } else {
                 Utils.updateFailCount();
