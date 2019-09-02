@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.awt.Component;
 import java.io.PrintWriter;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -218,7 +219,12 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 result.put("result", resultPro);
                 result.put("code", jsonObject.get("code").getAsString());
             }
-        } catch (Exception e) {
+        } catch (SocketTimeoutException s) {
+            stderr.print("Request to " + url + " timeout!");
+            result.put("result", "请求超时");
+            result.put("code", "-1");
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return result;
@@ -248,25 +254,4 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
         }
         return result;
     }
-
-//    public void processProxyMessage(boolean messageIsRequest, final IInterceptedProxyMessage iInterceptedProxyMessage) {
-//        Map<String, String> res;
-//        try {
-//            if (!Config.IS_RUNNING) {
-//                return;
-//            }
-//            IHttpRequestResponse messageInfo = iInterceptedProxyMessage.getMessageInfo();
-//            String result = getRequestData(messageInfo);
-//            res = sendPost("http://localhost:8000/api", result);
-//            IRequestInfo request = helpers.analyzeRequest(messageInfo);
-//            int row = log.size();
-//            log.add(new LogEntry(iInterceptedProxyMessage.getMessageReference(),
-//                    callbacks.saveBuffersToTempFiles(iInterceptedProxyMessage.getMessageInfo()), request.getUrl(),
-//                    request.getMethod(), res)
-//            );
-//            GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

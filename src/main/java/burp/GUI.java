@@ -166,8 +166,8 @@ public class GUI implements IMessageEditorController {
                     logTable.getHttpLogTableModel().fireTableDataChanged();//通知模型更新
                     logTable.updateUI();//刷新表格
                     requestViewer.setMessage("".getBytes(),true);
-                    responseViewer.setMessage("".getBytes(),false);
-                    proxyRspViewer.setText("".getBytes());
+//                    responseViewer.setMessage("".getBytes(),false);
+//                    proxyRspViewer.setText("".getBytes());
                 }
             }
         });
