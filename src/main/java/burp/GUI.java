@@ -328,12 +328,12 @@ public class GUI implements IMessageEditorController {
 
         JTabbedPane tabs = new JTabbedPane();
         requestViewer = BurpExtender.callbacks.createMessageEditor(this, false);
-        responseViewer = BurpExtender.callbacks.createMessageEditor(this, false);
-        proxyRspViewer = BurpExtender.callbacks.createTextEditor();
+//        responseViewer = BurpExtender.callbacks.createMessageEditor(this, false);
+//        proxyRspViewer = BurpExtender.callbacks.createTextEditor();
 
         tabs.addTab("Request", requestViewer.getComponent());
-        tabs.addTab("Original response", responseViewer.getComponent());
-        tabs.addTab("Proxy response",proxyRspViewer.getComponent());
+//        tabs.addTab("Original response", responseViewer.getComponent());
+//        tabs.addTab("Proxy response",proxyRspViewer.getComponent());
         splitPane.setBottomComponent(tabs);
 
         BurpExtender.callbacks.customizeUiComponent(topPanel);
