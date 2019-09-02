@@ -56,7 +56,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
 //                BurpExtender.this.callbacks.registerProxyListener(BurpExtender.this);
                 BurpExtender.this.callbacks.registerHttpListener(BurpExtender.this);
-                stdout.println(Utils.getBanner());
+//                stdout.println(Utils.getBanner());
             }
         });
         executorService = Executors.newSingleThreadExecutor();
