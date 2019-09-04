@@ -134,6 +134,9 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
 
     public void processHttpMessage(int toolFlag, boolean messageIsRequest, final IHttpRequestResponse messageInfo) {
         try {
+            if (!messageIsRequest) {
+                return;
+            }
             if (!Config.IS_RUNNING) {
                 return;
             }
