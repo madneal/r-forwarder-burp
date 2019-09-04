@@ -156,6 +156,7 @@ public class GUI implements IMessageEditorController {
                         "Are you sure you want to clear the data？",
                         "Passvie Scan Client prompt", JOptionPane.YES_NO_OPTION);
                 if(n == 0) {
+                    Config.RequestId = 0;
                     Config.REQUEST_TOTAL = 0;
                     lbRequestCount.setText("0");
                     Config.SUCCESS_TOTAL = 0;
