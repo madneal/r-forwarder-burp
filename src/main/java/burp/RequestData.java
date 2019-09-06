@@ -1,6 +1,5 @@
 package burp;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +15,9 @@ public class RequestData {
         this.t = t;
         this.headers = headers;
     }
+
     private String url;
-    private List<Map<String, String>> headers = new ArrayList<>();
+    private List<Map<String, String>> headers;
     private String host;
     private String method;
     private String agentId;
