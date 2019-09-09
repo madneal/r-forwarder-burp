@@ -238,12 +238,12 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             String url = requestInfo.getUrl().toString();
             String method = requestInfo.getMethod();
             String host = requestInfo.getUrl().getHost();
-            String postData = "";
+            String postdata = "";
             if (method == "POST") {
-                postData = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes());
+                postdata = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes());
             }
             long t = System.currentTimeMillis();
-            RequestData requestData = new RequestData(url, host, method, Config.AGENT_ID, postData, t, headers);
+            RequestData requestData = new RequestData(url, host, method, Config.AGENT_ID, postdata, t, headers);
             Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             result = gson.toJson(requestData);
         } catch (Exception e) {

@@ -6,13 +6,13 @@ import java.util.Map;
 
 public class RequestData {
 
-    public RequestData(String url, String host, String method, String agentId, String postData, long t,
+    public RequestData(String url, String host, String method, String agentId, String postdata, long t,
                        List<Map<String, String>> headers) {
         this.url = url;
         this.host = host;
         this.method = method;
         this.agentId = agentId;
-        this.postData = postData;
+        this.postdata = postdata;
         this.t = t;
         this.headers = headers;
     }
@@ -21,7 +21,7 @@ public class RequestData {
     private String host;
     private String method;
     private String agentId;
-    private String postData;
+    private String postdata;
     private long t;
 
 
@@ -66,11 +66,11 @@ public class RequestData {
     }
 
     public String getPostData() {
-        return postData;
+        return postdata;
     }
 
-    public void setPostData(String postData) {
-        this.postData = postData;
+    public void setPostData(String postdata) {
+        this.postdata = postdata;
     }
 
     public long getT() {
