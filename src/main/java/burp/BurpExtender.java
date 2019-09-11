@@ -86,19 +86,17 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
         return gui.getComponet();
     }
 
-    public List<Map<String, String>> getHeaders(IHttpRequestResponse messageInfo) {
-        List<Map<String, String>> headers = new ArrayList<>();
+    public Map<String, String> getHeaders(IHttpRequestResponse messageInfo) {
+        Map<String, String> headers = new HashMap<>();
         IRequestInfo analyzeRequest = helpers.analyzeRequest(messageInfo);
         List<String> h = analyzeRequest.getHeaders();
         for (String h1: h) {
-            Map<String, String> hMap = new HashMap<>();
             if (h1.startsWith("GET") || h1.startsWith("POST")) {
                 continue;
             } else {
-                String[] header = h1.split(":", -1);
-                hMap.put(header[0], header[1]);
+                String[] header = h1.split(":", 2);
+                headers.put(header[0], header[1]);
             }
-            headers.add(hMap);
         }
         return headers;
     }
@@ -233,7 +231,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     private String getRequestData(IHttpRequestResponse messageInfo) {
         String result = "";
         try {
-            List<Map<String, String>> headers = getHeaders(messageInfo);
+            Map<String, String> headers = getHeaders(messageInfo);
             IRequestInfo requestInfo = helpers.analyzeRequest(messageInfo);
             String url = requestInfo.getUrl().toString();
             String method = requestInfo.getMethod();
