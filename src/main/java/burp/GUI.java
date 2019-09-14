@@ -13,6 +13,8 @@ public class GUI implements IMessageEditorController {
     private JTextField tfService;
     private JLabel lbAgendId;
     private JTextField tfAgentId;
+    private JLabel lbIsDuplicate;
+    private JCheckBox isDuplicate;
     private JLabel lbSaveResult;
     private JTextField tfDomain;
     private JTextField tfExcludeSuffix;
@@ -26,8 +28,8 @@ public class GUI implements IMessageEditorController {
     public static JLabel lbFailCount;
 
     public static IMessageEditor requestViewer;
-    public static IMessageEditor responseViewer;
-    public static ITextEditor proxyRspViewer;
+//    public static IMessageEditor responseViewer;
+//    public static ITextEditor proxyRspViewer;
 
 
     public GUI() {
@@ -95,6 +97,14 @@ public class GUI implements IMessageEditorController {
         gbc_tfHost.gridy = 0;
         ConfigPanel.add(tfAgentId, gbc_tfAgentId);
 
+        lbIsDuplicate = new JLabel("是否去重");
+        GridBagConstraints gbc_lbIsDuplicate = new GridBagConstraints();
+        gbc_lbHost.fill = 2;
+        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
+        gbc_lbHost.gridx = 0;
+        gbc_lbHost.gridy = 0;
+        ConfigPanel.add(lbIsDuplicate, gbc_lbService);
+
         lbSaveResult = new JLabel();
         GridBagConstraints gbc_lbSaveResult = new GridBagConstraints();
         gbc_lbHost.fill = 2;
@@ -109,6 +119,8 @@ public class GUI implements IMessageEditorController {
 //        gbc_lb1.gridx = 10;
 //        gbc_lb1.gridy = 0;
 //        ConfigPanel.add(lbSaveResult, gbc_lb1);
+
+
 
         btnConn = new JToggleButton("ON");
         btnConn.addChangeListener(new ChangeListener() {
