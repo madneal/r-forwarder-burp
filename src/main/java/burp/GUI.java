@@ -14,7 +14,7 @@ public class GUI implements IMessageEditorController {
     private JLabel lbAgendId;
     private JTextField tfAgentId;
     private JLabel lbIsDuplicate;
-    private JCheckBox isDuplicate;
+    private JCheckBox ckIsDuplicate;
     private JLabel lbSaveResult;
     private JTextField tfDomain;
     private JTextField tfExcludeSuffix;
@@ -103,7 +103,16 @@ public class GUI implements IMessageEditorController {
         gbc_lbHost.insets = new Insets(0, 0, 0, 5);
         gbc_lbHost.gridx = 0;
         gbc_lbHost.gridy = 0;
-        ConfigPanel.add(lbIsDuplicate, gbc_lbService);
+        ConfigPanel.add(lbIsDuplicate, gbc_lbIsDuplicate);
+
+        ckIsDuplicate = new JCheckBox();
+        GridBagConstraints gbc_ckIsDuplicate = new GridBagConstraints();
+        gbc_lbHost.fill = 2;
+        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
+        gbc_lbHost.gridx = 0;
+        gbc_lbHost.gridy = 0;
+        ConfigPanel.add(ckIsDuplicate, gbc_ckIsDuplicate);
+
 
         lbSaveResult = new JLabel();
         GridBagConstraints gbc_lbSaveResult = new GridBagConstraints();
@@ -112,6 +121,8 @@ public class GUI implements IMessageEditorController {
         gbc_lbHost.gridx = 0;
         gbc_lbHost.gridy = 0;
         ConfigPanel.add(lbSaveResult, gbc_lbSaveResult);
+
+
 
 //        GridBagConstraints gbc_lb1 = new GridBagConstraints();
 //        gbc_lb1.anchor = 13;
