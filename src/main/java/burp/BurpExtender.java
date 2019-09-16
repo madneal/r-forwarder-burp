@@ -97,7 +97,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 continue;
             } else {
                 String[] header = h1.split(":", 2);
-                headers.put(header[0], header[1]);
+                headers.put(header[0], header[1].trim());
             }
         }
         return headers;
