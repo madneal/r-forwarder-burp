@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.corba.se.impl.orbutil.threadpool.TimeoutException;
 import org.apache.commons.codec.Charsets;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -11,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -149,13 +151,15 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 return;
             }
             String toolSource = getToolSource(toolFlag);
-            String result = getRequestData(messageInfo);
+            RequestData requestData = getRequestData(messageInfo);
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+            String result = gson.toJson(requestData);
             Map<String, String> res = sendPost(Config.SERVICE, result);
 
             Config.RequestId++;
             int row = log.size();
             log.add(new LogEntry(Config.RequestId,
-                    callbacks.saveBuffersToTempFiles(messageInfo), request.getUrl(), toolSource,
+                    callbacks.saveBuffersToTempFiles(messageInfo), requestData.getUrl(), toolSource,
                     request.getMethod(), res)
             );
             GUI.logTable.getHttpLogTableModel().fireTableRowsInserted(row, row);
@@ -219,6 +223,10 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             stderr.print("Request to " + url + " timeout!");
             result.put("result", "请求超时");
             result.put("code", "-1");
+        } catch (ConnectTimeoutException e1) {
+            stderr.print("Request to " + url + " timeout!");
+            result.put("result", "请求超时");
+            result.put("code", "-1");
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -228,12 +236,15 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     }
 
     // obtain request data as JSON string
-    private String getRequestData(IHttpRequestResponse messageInfo) {
-        String result = "";
+    private RequestData getRequestData(IHttpRequestResponse messageInfo) {
+        RequestData requestData = null;
         try {
             Map<String, String> headers = getHeaders(messageInfo);
             IRequestInfo requestInfo = helpers.analyzeRequest(messageInfo);
             String url = requestInfo.getUrl().toString();
+            if (!Config.IS_DUPLICATE) {
+                url = url + "$$";
+            }
             String method = requestInfo.getMethod();
             String host = requestInfo.getUrl().getHost();
             String postdata = "";
@@ -241,13 +252,11 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
                 postdata = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes());
             }
             long t = System.currentTimeMillis();
-            RequestData requestData = new RequestData(url, host, method, Config.AGENT_ID, postdata, t, headers);
-            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-            result = gson.toJson(requestData);
+            requestData = new RequestData(url, host, method, Config.AGENT_ID, postdata, t, headers);
         } catch (Exception e) {
             e.printStackTrace();
             stderr.print(e);
         }
-        return result;
+        return requestData;
     }
 }

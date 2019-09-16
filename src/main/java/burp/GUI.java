@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class GUI implements IMessageEditorController {
     private JPanel contentPane;
@@ -13,7 +11,6 @@ public class GUI implements IMessageEditorController {
     private JTextField tfService;
     private JLabel lbAgendId;
     private JTextField tfAgentId;
-    private JLabel lbIsDuplicate;
     private JCheckBox ckIsDuplicate;
     private JLabel lbSaveResult;
     private JTextField tfDomain;
@@ -97,21 +94,18 @@ public class GUI implements IMessageEditorController {
         gbc_tfAgentId.gridy = 0;
         ConfigPanel.add(tfAgentId, gbc_tfAgentId);
 
-        lbIsDuplicate = new JLabel("是否去重");
-        GridBagConstraints gbc_lbIsDuplicate = new GridBagConstraints();
-        gbc_lbIsDuplicate.fill = 2;
-        gbc_lbIsDuplicate.insets = new Insets(0, 0, 0, 5);
-        gbc_lbIsDuplicate.gridx = 4;
-        gbc_lbIsDuplicate.gridy = 0;
-        ConfigPanel.add(lbIsDuplicate, gbc_lbIsDuplicate);
-
-        ckIsDuplicate = new JCheckBox();
+        ckIsDuplicate = new JCheckBox("是否去重", true);
         GridBagConstraints gbc_ckIsDuplicate = new GridBagConstraints();
         gbc_ckIsDuplicate.fill = 2;
         gbc_ckIsDuplicate.insets = new Insets(0, 0, 0, 5);
         gbc_ckIsDuplicate.gridx = 5;
         gbc_ckIsDuplicate.gridy = 0;
         ConfigPanel.add(ckIsDuplicate, gbc_ckIsDuplicate);
+
+        ckIsDuplicate.addActionListener(arg0 -> {
+            boolean selected = ckIsDuplicate.isSelected();
+            Config.IS_DUPLICATE = selected;
+        });
 
 
         lbSaveResult = new JLabel();
@@ -134,35 +128,33 @@ public class GUI implements IMessageEditorController {
 
 
         btnConn = new JToggleButton("ON");
-        btnConn.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent arg0) {
-                boolean isSelected = btnConn.isSelected();
-                lbSaveResult.setText("");
+        btnConn.addChangeListener(arg0 -> {
+            boolean isSelected = btnConn.isSelected();
+            lbSaveResult.setText("");
 
-                if(isSelected) {
-                    Config.IS_RUNNING = true;
-                    Config.AGENT_ID = tfAgentId.getText();
-                    Config.SERVICE = tfService.getText();
-                    if (Config.AGENT_ID.equals("")) {
-                        lbSaveResult.setText("<html><font color='red'>请填写 AgentId</font></html>");
-                        return;
-                    }
-                    if (Config.SERVICE.equals("")) {
-                        lbSaveResult.setText("<html><font color='red'>请填写 Service</font></html>");
-                        return;
-                    }
-                    Config.DOMAIN_REGX = tfDomain.getText();
-                    Config.SUFFIX_REGX = tfExcludeSuffix.getText();
-                    btnConn.setText("OFF");
-                    setAllEnabled(false);
-                } else {
-                    btnConn.setText("ON");
-                    Config.IS_RUNNING = false;
-                    setAllEnabled(true);
+            if(isSelected) {
+                Config.IS_RUNNING = true;
+                Config.AGENT_ID = tfAgentId.getText();
+                Config.SERVICE = tfService.getText();
+                if (Config.AGENT_ID.equals("")) {
+                    lbSaveResult.setText("<html><font color='red'>请填写 AgentId</font></html>");
+                    return;
                 }
-                btnConn.setSelected(isSelected);
-
+                if (Config.SERVICE.equals("")) {
+                    lbSaveResult.setText("<html><font color='red'>请填写 Service</font></html>");
+                    return;
+                }
+                Config.DOMAIN_REGX = tfDomain.getText();
+                Config.SUFFIX_REGX = tfExcludeSuffix.getText();
+                btnConn.setText("OFF");
+                setAllEnabled(false);
+            } else {
+                btnConn.setText("ON");
+                Config.IS_RUNNING = false;
+                setAllEnabled(true);
             }
+            btnConn.setSelected(isSelected);
+
         });
         GridBagConstraints gbc_btnConn = new GridBagConstraints();
         gbc_btnConn.fill = 2;
