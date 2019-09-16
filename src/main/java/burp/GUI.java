@@ -82,44 +82,44 @@ public class GUI implements IMessageEditorController {
 
         lbAgendId = new JLabel("<html>AgentId:<font color='red'>*</font></html>");
         GridBagConstraints gbc_lbService = new GridBagConstraints();
-        gbc_lbHost.fill = 2;
-        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
-        gbc_lbHost.gridx = 0;
-        gbc_lbHost.gridy = 0;
+        gbc_lbService.fill = 2;
+        gbc_lbService.insets = new Insets(0, 0, 0, 5);
+        gbc_lbService.gridx = 2;
+        gbc_lbService.gridy = 0;
         ConfigPanel.add(lbAgendId, gbc_lbService);
 
         tfAgentId = new JTextField(10);
         tfAgentId.setText("");
         GridBagConstraints gbc_tfAgentId = new GridBagConstraints();
-        gbc_tfHost.fill = 2;
-        gbc_tfHost.insets = new Insets(0, 0, 0, 5);
-        gbc_tfHost.gridx = 1;
-        gbc_tfHost.gridy = 0;
+        gbc_tfAgentId.fill = 2;
+        gbc_tfAgentId.insets = new Insets(0, 0, 0, 5);
+        gbc_tfAgentId.gridx = 3;
+        gbc_tfAgentId.gridy = 0;
         ConfigPanel.add(tfAgentId, gbc_tfAgentId);
 
         lbIsDuplicate = new JLabel("是否去重");
         GridBagConstraints gbc_lbIsDuplicate = new GridBagConstraints();
-        gbc_lbHost.fill = 2;
-        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
-        gbc_lbHost.gridx = 0;
-        gbc_lbHost.gridy = 0;
+        gbc_lbIsDuplicate.fill = 2;
+        gbc_lbIsDuplicate.insets = new Insets(0, 0, 0, 5);
+        gbc_lbIsDuplicate.gridx = 4;
+        gbc_lbIsDuplicate.gridy = 0;
         ConfigPanel.add(lbIsDuplicate, gbc_lbIsDuplicate);
 
         ckIsDuplicate = new JCheckBox();
         GridBagConstraints gbc_ckIsDuplicate = new GridBagConstraints();
-        gbc_lbHost.fill = 2;
-        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
-        gbc_lbHost.gridx = 0;
-        gbc_lbHost.gridy = 0;
+        gbc_ckIsDuplicate.fill = 2;
+        gbc_ckIsDuplicate.insets = new Insets(0, 0, 0, 5);
+        gbc_ckIsDuplicate.gridx = 5;
+        gbc_ckIsDuplicate.gridy = 0;
         ConfigPanel.add(ckIsDuplicate, gbc_ckIsDuplicate);
 
 
         lbSaveResult = new JLabel();
         GridBagConstraints gbc_lbSaveResult = new GridBagConstraints();
-        gbc_lbHost.fill = 2;
-        gbc_lbHost.insets = new Insets(0, 0, 0, 5);
-        gbc_lbHost.gridx = 0;
-        gbc_lbHost.gridy = 0;
+        gbc_lbSaveResult.fill = 2;
+        gbc_lbSaveResult.insets = new Insets(0, 0, 0, 5);
+        gbc_lbSaveResult.gridx = 0;
+        gbc_lbSaveResult.gridy = 0;
         ConfigPanel.add(lbSaveResult, gbc_lbSaveResult);
 
 
