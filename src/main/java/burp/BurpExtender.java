@@ -139,7 +139,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             if (!Config.IS_RUNNING) {
                 return;
             }
-            if (!(toolFlag == 4 || toolFlag == 64)) {
+            if (!(toolFlag == 4 || toolFlag == 64 || toolFlag == 32)) {
                 return;
             }
             IRequestInfo request = helpers.analyzeRequest(messageInfo);
