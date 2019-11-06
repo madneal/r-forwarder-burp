@@ -33,7 +33,7 @@ import javax.swing.table.TableColumnModel;
 
 public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public final static String extensionName = "R-forwarder";
-    public final static String version ="0.0.1";
+    public final static String version ="0.0.2";
     public static IBurpExtenderCallbacks callbacks;
     public static IExtensionHelpers helpers;
     public static PrintWriter stdout;
@@ -248,7 +248,7 @@ public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
             String host = requestInfo.getUrl().getHost();
             String postdata = "";
             if (method == "POST") {
-                postdata = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes());
+                postdata = Base64.getEncoder().encodeToString(getBody(messageInfo).getBytes("UTF-8"));
             }
             long t = System.currentTimeMillis();
             requestData = new RequestData(url, host, method, Config.AGENT_ID, postdata, t, headers);
