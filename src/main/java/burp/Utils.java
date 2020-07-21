@@ -11,9 +11,9 @@ public class Utils {
                         + "[+]\n"
                         + "[+] #####################################\n"
                         + "[+]    " + BurpExtender.extensionName + " v" + BurpExtender.version +"\n"
-                        + "[+]    anthor: neal1991\n"
+                        + "[+]    anthor: madneal\n"
                         + "[+]    email:  bing.ecnu@gmail.com\n"
-                        + "[+]    github: https://github.com/neal1991/r-forwarder-burp\n"
+                        + "[+]    github: https://github.com/madneal/r-forwarder-burp\n"
                         + "[+] ####################################\n"
                         + "[+] Please enjoy it!";
         return bannerInfo;
