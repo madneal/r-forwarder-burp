@@ -1,4 +1,4 @@
-package burp;
+package forwader;
 
 import java.util.Map;
 

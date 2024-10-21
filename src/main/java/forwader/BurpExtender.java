@@ -1,4 +1,4 @@
-package burp;
+package forwader;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +16,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import utils.Config;
 
 import java.awt.Component;
 import java.io.PrintWriter;
@@ -28,8 +29,6 @@ import java.util.concurrent.Executors;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-
-
 
 public class BurpExtender implements IBurpExtender, ITab, IHttpListener {
     public final static String extensionName = "R-forwarder";

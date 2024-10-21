@@ -1,4 +1,4 @@
-package burp;
+package utils;
 
 public class Config {
     public static boolean IS_RUNNING = false;

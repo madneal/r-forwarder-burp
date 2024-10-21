@@ -1,4 +1,6 @@
-package burp;
+package forwader;
+
+import utils.Config;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

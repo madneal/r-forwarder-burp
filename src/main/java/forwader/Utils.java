@@ -1,4 +1,6 @@
-package burp;
+package forwader;
+
+import utils.Config;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
